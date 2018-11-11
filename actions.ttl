@@ -8,7 +8,7 @@
 @prefix rdf:         <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix owl:         <http://www.w3.org/2002/07/owl#> .
 @prefix wdrs:        <http://www.w3.org/2007/05/powder-s#> .
-@prefix :            <http://www.openlinksw.com/data/turtle/actions.ttl#> .
+@prefix :            <#> .
 @prefix source:      <http://www.openlinksw.com/data/turtle/actions.ttl> .
 @prefix sourceDAV:   <http://www.openlinksw.com/DAV/data/turtle/actions.ttl> .
 
@@ -106,7 +106,7 @@ source: a schema:CreativeWork ;
    a oplwebsrv:WebServiceParameter ;
    schema:name "Command Parameter"^^xsd:string ;
    oplwebsrv:parameterName "command" ;
-   oplwebsrv:parameterValue "add"^^xsd:string ;
+   oplwebsrv:parameterExampleValue "add"^^xsd:string ;
    wdrs:describedby source: .
 
 
