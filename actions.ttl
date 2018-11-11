@@ -20,7 +20,7 @@ sourceDAV:
    cc:attributionURL <http://www.openlinksw.com/dataspace/organization/openlink#this> ;
    schema:datePublished "2013-01-12T12:38:25-00:00"^^xsd:dateTime ;
    schema:dateCreated "2013-01-12T12:38:25-00:00"^^xsd:dateTime ;
-   schema:dateModified "2018-07-09T16:25:10+01:00"^^xsd:dateTime;
+   schema:dateModified "2018-11-11T16:25:10+01:00"^^xsd:dateTime;
    schema:name "OpenLink Actions and their Endpoints Related Information Document " ;
    schema:comment  """This document is a launch point for discovering routes to various information sources associated with OpenLink Actions and their Endpoints """^^xsd:string ;
    owl:sameAs source: .
@@ -36,7 +36,7 @@ source: a schema:CreativeWork ;
    cc:attributionURL <http://www.openlinksw.com/dataspace/organization/openlink#this> ;
    schema:datePublished "2013-01-12T12:38:25-00:00"^^xsd:dateTime ;
    schema:dateCreated "2013-01-12T12:38:25-00:00"^^xsd:dateTime ;
-   schema:dateModified "2018-07-09T16:25:10+01:00"^^xsd:dateTime;
+   schema:dateModified "2018-11-11T16:25:10+01:00"^^xsd:dateTime;
    xhv:alternate <http://virtuoso.openlinksw.com/offers/> ;
    schema:mainEntity <https://shop.openlinksw.com/cart.vsp#this> ,
                      <https://shop.openlinksw.com/cart#this> ,
