@@ -1,0 +1,116 @@
+## Generic Description
+## Schema.org Terms
+
+@prefix oplwebsrv: <http://www.openlinksw.com/ontology/webservices#> .
+@prefix schema: <http://schema.org/> . 
+@prefix wdrs: <http://www.w3.org/2007/05/powder-s#> .
+
+<#this>
+a schema:CreativeWork ;
+schema:name "Description of a Generic Search & Faceted Browsing Service, Actions, and Endpoints" ;
+schema:mentions <http://linkeddata.uriburner.com/fct/search#this> ;
+schema:mainEntity <#FacetedBrowsingService> ;
+schema:about <#FacetedBrowsingService> .
+
+<#FacetedBrowsingService>
+a schema:WebApplication ;
+schema:name "Faceted Browsing Service" ;
+schema:alternateName "dataBrowser" ;
+schema:potentialAction <#FacetedBrowsingAction> .
+<#FacetedBrowsingAction>
+a schema:Action, schema:SearchAction ;
+schema:name "Search — Faceted Browsing Action" ;
+schema:target <http://linkeddata.uriburner.com/fct/search#this> .
+<http://linkeddata.uriburner.com/fct/search#this>
+a schema:EntryPoint ;
+schema:name "Search — Faceted Browsing Service Endpoint" ;
+schema:description """HTTP Service Endpoint that accepts a variety of parameters that calibrate Faceted Browsing over 
+ various entity relationship dimensions: entity types, attribute names, attribute values. Parameters include:
+ q for keywords, view:type for dimension [entity type, attribute names, attribute values].
+ """ ;
+schema:contentType "text/html","application/rdf+xml","text/turtle","application/json" ;
+schema:httpMethod "GET" ;
+schema:urlTemplate "http://linkeddata.uriburner.com/fct/search(?q,view:type,c-term,s-term,same-as,inference,offset,limit)" ; 
+schema:url <http://linkeddata.uriburner.com/fct/search>;
+schema:mainEntityOfPage <#this> ;
+## OpenLink Web Services Ontology Terms
+oplwebsrv:isWebServiceOf <#FacetedBrowsingAction> ;
+oplwebsrv:endPointURL <http://linkeddata.uriburner.com/fct/search> ;
+oplwebsrv:urlTemplate "http://linkeddata.uriburner.com/fct/search(?q,view:type,c-term,s-term,same-as,inference,offset,limit)" ;
+oplwebsrv:hasParameter <#FacetedBrowsingServiceParameterQ> ;
+oplwebsrv:hasParameter <#FacetedBrowsingServiceParameterViewType> ;
+oplwebsrv:hasParameter <#FacetedBrowsingServiceParameterSameAs> ;
+oplwebsrv:hasParameter <#FacetedBrowsingServiceParameterOffset> ;
+oplwebsrv:hasParameter <#FacetedBrowsingServiceParameterLimit> ;
+oplwebsrv:usageExample "http://linkeddata.uriburner.com/fct/search?q=linked+data&view:type=entity-types&same-as=&offset=100&limit=100", 
+                       "http://linkeddata.uriburner.com/fct/search?q=linked+data&view:type=entity-types&same-as=yes&offset=100&limit=100" ;
+wdrs:describedby <#this> ; 
+schema:mainEntityOfPage <#this> .
+
+<#FacetedBrowsingServiceParameterQ>
+a oplwebsrv:WebServiceParameter ;
+schema:name "Faceted Browsing Service Parameter 'q'" ;
+schema:description """
+ This parameter takes a keyword or phrase as its value. 
+ """;
+oplwebsrv:usageExample "http://linkeddata.uriburner.com/fct/search?q=linked+data" ;
+oplwebsrv:parameterName "q" ; 
+oplwebsrv:parameterExampleValue "linked+data" ;
+wdrs:describedby <#this> ; 
+schema:mainEntityOfPage <#this> .
+
+<#FacetedBrowsingServiceParameterViewType>
+a oplwebsrv:WebServiceParameter ;
+schema:name "Faceted Browsing Service Parameter 'view:type'" ;
+schema:description """
+ This parameter takes a literal value that sets the default view orientation 
+ of the initial page returned by the Faceted Browsing Service. 
+ """;
+oplwebsrv:parameterName "view:type" ; 
+oplwebsrv:parameterExampleValue "entity-types" ;
+oplwebsrv:usageExample "http://linkeddata.uriburner.com/fct/search?q=linked+data&view:type=entity-types" ;
+oplwebsrv:parameterExampleValue "attribute-names" ;
+oplwebsrv:usageExample "http://linkeddata.uriburner.com/fct/search?q=linked+data&view:type=attribute-names&same-as=yes&offset=100&limit=100" ;
+wdrs:describedby <#this> ; 
+schema:mainEntityOfPage <#this> .
+
+<#FacetedBrowsingServiceParameterSameAs>
+a oplwebsrv:WebServiceParameter ;
+schema:name "Faceted Browsing Service Parameter 'same-as'" ;
+schema:description """
+ This parameter determines if owl:sameAs inference and reasoning is applied to 
+ the generation of data presented by the entity description page. 
+ """;
+oplwebsrv:usageExample "http://linkeddata.uriburner.com/fct/search?q=linked+data&view:type=entity-types&same-as=yes" ;
+oplwebsrv:parameterName "same-as" ; 
+oplwebsrv:parameterExampleValue "yes" ;
+wdrs:describedby <#this> ; 
+schema:mainEntityOfPage <#this> .
+
+<#FacetedBrowsingServiceParameterOffset>
+a oplwebsrv:ServiceParameter ;
+schema:name "Faceted Browsing Service Parameter 'offset'" ;
+schema:description """
+ This parameter determines offset (marker) boundary size that enables a user scroll (in either direction) through 
+ data presented in the entity description page of the Faceted Browser Service. Increase using blocks of this value 
+ to page forward or backwards.
+ """;
+oplwebsrv:usageExample "http://linkeddata.uriburner.com/fct/search?q=linked+data&view:type=entity-types&same-as=yes&offset=100&limit=100" ;
+oplwebsrv:parameterName "offset" ; 
+oplwebsrv:parameterExampleValue "100" ;
+wdrs:describedby <#this> ; 
+schema:mainEntityOfPage <#this> .
+
+<#FacetedBrowsingServiceParameterLimit>
+a oplwebsrv:WebServiceParameter ;
+schema:name "Faceted Browsing Service Parameter 'limit'" ;
+schema:description """
+ This parameter determines maximum size of entity relationships in a query solution that provides
+ data presented in the entity description page of the Faceted Browser Service. This value remains fixed
+ when a user is scrolling through a query solution that provides data to a Faceted Browsing Page. 
+ """;
+oplwebsrv:usageExample "http://linkeddata.uriburner.com/fct/search?q=linked+data&view:type=entity-types&same-as=yes&offset=100&limit=100" ;
+oplwebsrv:parameterName "limit" ; 
+oplwebsrv:parameterExampleValue "100" ;
+wdrs:describedby <#this> ; 
+schema:mainEntityOfPage <#this> .
