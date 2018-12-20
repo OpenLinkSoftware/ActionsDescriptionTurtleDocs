@@ -1,0 +1,67 @@
+## Generic Description
+## Schema.org Terms
+
+@prefix oplwebsrv: <http://www.openlinksw.com/ontology/webservices#> .
+@prefix schema: <http://schema.org/> . 
+@prefix wdrs: <http://www.w3.org/2007/05/powder-s#> .
+@base <https://www.cnn.com/> .
+@prefix search: </search/> .
+@prefix : <#> . 
+
+<>
+a schema:CreativeWork, schema:WebPage ;
+schema:name "Home Page" ;
+schema:about  search:, search:service ;
+schema:potentialAction <#ArticleSearchAction> ;
+schema:identifier <#this> . 
+
+search:service
+a schema:WebApplication ;
+schema:name "CNN Blog Search Service" ;
+schema:alternateName "cNNBlogSearch" ;
+schema:potentialAction <#ArticleSearchAction> .
+
+<#ArticleSearchAction>
+a schema:Action, schema:SearchAction ;
+schema:name "Search - CNN" ;
+schema:target search:#this .
+
+search:#this
+a schema:EntryPoint ;
+schema:name "Search - CNN Service Endpoint" ;
+schema:description """Parameters include:
+ search for keywords.
+ """ ;
+schema:contentType "text/html";
+schema:httpMethod "GET" ;
+schema:urlTemplate "https://www.cnn.com/search/(?q)" ; 
+schema:url <https://www.cnn.com/search/>;
+schema:mainEntityOfPage <#this> ;
+## OpenLink Web Services Ontology Terms
+oplwebsrv:isWebServiceOf <#ArticleSearchAction> ;
+oplwebsrv:endPointURL <https://www.cnn.com/search/> ;
+oplwebsrv:urlTemplate "https://www.cnn.com/search/(?q)" ;
+oplwebsrv:hasParameter <#SearchServiceParameterQ>, <#SearchServiceParameterSize> ;
+oplwebsrv:usageExample "https://www.cnn.com/search/?q=Climate"; 
+wdrs:describedby <#this> ; 
+schema:mainEntityOfPage <#this> .
+
+<#SearchServiceParameterSize>
+a oplwebsrv:WebServiceParameter ;
+schema:name """CNN Service Parameter 'size'""" ;
+schema:description """This parameter takes a keyword or phrase as its value. """;
+oplwebsrv:usageExample "https://www.cnn.com/search/?size=10&q=Climate" ;
+oplwebsrv:parameterName "size" ; 
+oplwebsrv:parameterExampleValue "10" ;
+wdrs:describedby <#this> ; 
+schema:mainEntityOfPage <#this> .
+
+<#SearchServiceParameterQ>
+a oplwebsrv:WebServiceParameter ;
+schema:name """CNN Service Parameter 'q'""" ;
+schema:description """This parameter takes a keyword or phrase as its value. """;
+oplwebsrv:usageExample "https://www.cnn.com/search/?size=10&?q=Climate" ;
+oplwebsrv:parameterName "q" ; 
+oplwebsrv:parameterExampleValue "Climate" ;
+wdrs:describedby <#this> ; 
+schema:mainEntityOfPage <#this> .
