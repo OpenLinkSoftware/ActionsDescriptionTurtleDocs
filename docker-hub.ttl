@@ -1,0 +1,57 @@
+## Generic Description
+## Schema.org Terms
+
+@prefix oplwebsrv: <http://www.openlinksw.com/ontology/webservices#> .
+@prefix schema: <http://schema.org/> . 
+@prefix wdrs: <http://www.w3.org/2007/05/powder-s#> .
+@base <https://hub.docker.com/> .
+@prefix search: </search> .
+@prefix : <#> . 
+
+<>
+a schema:CreativeWork, schema:WebPage ;
+schema:name "Home Page" ;
+schema:about  search:, search:service ;
+schema:potentialAction <#ArticleSearchAction> ;
+schema:identifier <#this> . 
+
+search:service
+a schema:WebApplication ;
+schema:name "Docker Search Service" ;
+schema:alternateName "dockerSearch" ;
+schema:potentialAction <#ArticleSearchAction> .
+
+<#ArticleSearchAction>
+a schema:Action, schema:SearchAction ;
+schema:name "Search - Docker" ;
+schema:target search:#this .
+
+search:#this
+a schema:EntryPoint ;
+schema:name "Search - Docker Service Endpoint" ;
+schema:description """Parameters include:
+ search for keywords.
+ """ ;
+schema:contentType "text/html";
+schema:httpMethod "GET" ;
+schema:urlTemplate "https://hub.docker.com/search(?q)" ; 
+schema:url <https://hub.docker.com/search>;
+schema:mainEntityOfPage <#this> ;
+## OpenLink Web Services Ontology Terms
+oplwebsrv:isWebServiceOf <#ArticleSearchAction> ;
+oplwebsrv:endPointURL <https://hub.docker.com/search> ;
+oplwebsrv:urlTemplate "https://hub.docker.com/search(?q)" ;
+oplwebsrv:hasParameter <#SearchServiceParameterQ> ;
+oplwebsrv:usageExample "https://hub.docker.com/search?q=Virtuoso"; 
+wdrs:describedby <#this> ; 
+schema:mainEntityOfPage <#this> .
+
+<#SearchServiceParameterQ>
+a oplwebsrv:WebServiceParameter ;
+schema:name """Docker Service Parameter 'q'""" ;
+schema:description """This parameter takes a keyword or phrase as its value. """;
+oplwebsrv:usageExample "https://hub.docker.com/search?q=Virtuoso" ;
+oplwebsrv:parameterName "q" ; 
+oplwebsrv:parameterExampleValue "Virtuoso" ;
+wdrs:describedby <#this> ; 
+schema:mainEntityOfPage <#this> .
