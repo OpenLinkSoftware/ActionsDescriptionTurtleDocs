@@ -1,0 +1,57 @@
+## Generic Description
+## Schema.org Terms
+
+@prefix oplwebsrv: <http://www.openlinksw.com/ontology/webservices#> .
+@prefix schema: <http://schema.org/> . 
+@prefix wdrs: <http://www.w3.org/2007/05/powder-s#> .
+@base <https://www.nbcnews.com> .
+@prefix search: </pages/search/> .
+@prefix : <#> . 
+
+<>
+a schema:CreativeWork, schema:WebPage ;
+schema:name "Home Page" ;
+schema:about  search:, search:service ;
+schema:potentialAction <#ArticleSearchAction> ;
+schema:identifier <#this> . 
+
+search:service
+a schema:WebApplication ;
+schema:name "NBC News Blog Search Service" ;
+schema:alternateName "nbcNewsBlogSearch" ;
+schema:potentialAction <#ArticleSearchAction> .
+
+<#ArticleSearchAction>
+a schema:Action, schema:SearchAction ;
+schema:name "Search - NBC News" ;
+schema:target search:#this .
+
+search:#this
+a schema:EntryPoint ;
+schema:name "Search - NBC News Service Endpoint" ;
+schema:description """Parameters include:
+ search for keywords.
+ """ ;
+schema:contentType "text/html";
+schema:httpMethod "GET" ;
+schema:urlTemplate "https://www.nbcnews.com/pages/search/(?q)" ; 
+schema:url <https://www.nbcnews.com/pages/search/>;
+schema:mainEntityOfPage <#this> ;
+## OpenLink Web Services Ontology Terms
+oplwebsrv:isWebServiceOf <#ArticleSearchAction> ;
+oplwebsrv:endPointURL <https://www.nbcnews.com/pages/search/> ;
+oplwebsrv:urlTemplate "https://www.nbcnews.com/pages/search/(?q)" ;
+oplwebsrv:hasParameter <#SearchServiceParameterQ> ;
+oplwebsrv:usageExample "https://www.nbcnews.com/pages/search/?q=Climate"; 
+wdrs:describedby <#this> ; 
+schema:mainEntityOfPage <#this> .
+
+<#SearchServiceParameterQ>
+a oplwebsrv:WebServiceParameter ;
+schema:name """NBC News Service Parameter 'q'""" ;
+schema:description """This parameter takes a keyword or phrase as its value. """;
+oplwebsrv:usageExample "https://www.nbcnews.com/pages/search/?q=Climate" ;
+oplwebsrv:parameterName "q" ; 
+oplwebsrv:parameterExampleValue "Climate" ;
+wdrs:describedby <#this> ; 
+schema:mainEntityOfPage <#this> .
