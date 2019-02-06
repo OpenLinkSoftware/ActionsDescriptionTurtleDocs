@@ -1,0 +1,59 @@
+@prefix oplwebsrv: <http://www.openlinksw.com/ontology/webservices#> .
+@prefix schema: <http://schema.org/> .
+@prefix wdrs: <http://www.w3.org/2007/05/powder-s#> .
+@prefix yelp: <https://www.yelp.com/> .
+
+<#this>
+  a schema:CreativeWork , schema:WebPage ;
+  schema:name "Description of a Yelp Search Service" ;
+  schema:mainEntity <#YelpSearchService> ;
+  schema:about <#YelpSearchService> .
+
+<#YelpSearchService>
+  schema:mainEntityOfPage <#this> ;
+  a schema:WebApplication ;
+  schema:name "yelp_search" ;
+  schema:description "Yelp Search Service" ;
+  schema:potentialAction 
+    <#YelpSearchAction> ;
+  wdrs:describedby <#this> . 
+
+<#YelpSearchAction>
+  a schema:SearchAction , schema:Action ;
+  schema:name "Search - Yelp" ;
+  schema:target <#YelpSearchEntryPoint> ;
+  wdrs:describedby <#this> . 
+
+<#YelpSearchEntryPoint>
+  a schema:EntryPoint ;
+  schema:name "Yelp Search Service Endpoint" ;
+  schema:urlTemplate "https://www.yelp.com/search{?find_desc,findloc}" ;
+  schema:contentType "text/html" ;
+  schema:httpMethod "GET" ;
+  oplwebsrv:hasParameter 
+    <#YelpSearchParamFindDesc> , 
+    <#YelpSearchParamFindLoc> ;
+  oplwebsrv:usageExample "https://www.yelp.com/search?find_desc=Restaurants&find_loc=Lexington,MA" ;
+  wdrs:describedby <#this> . 
+
+<#YelpSearchParamFindDesc>
+  a oplwebsrv:WebServiceParameter ;
+  schema:name "Entity type" ;
+  schema:description "This parameter sets the entity type description to be searched for." ;
+  schema:shortDescription  "The entity type to search for." ;
+  oplwebsrv:parameterName "find_desc" ;
+  oplwebsrv:isRequired true ;
+  oplwebsrv:parameterExampleValue "Restauraunt" ;
+  oplwebsrv:usageExample "https://www.yelp.com/search?find_desc=Restaurants" ;
+  wdrs:describedby <#this> . 
+
+<#YelpSearchParamFindLoc>
+  a oplwebsrv:WebServiceParameter ;
+  schema:name "Location" ;
+  schema:description "This parameter sets the location to be searched within." ;
+  schema:shortDescription   "Location to search" ;
+  oplwebsrv:parameterName "find_loc" ;
+  oplwebsrv:isRequired true ;
+  oplwebsrv:parameterExampleValue "Lexington,MA" ;
+  oplwebsrv:usageExample "https://www.yelp.com/search?find_desc=Restaurants&find_loc=Lexington" ;
+  wdrs:describedby <#this> . 
