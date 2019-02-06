@@ -1,0 +1,142 @@
+@prefix oplsec:	<http://www.openlinksw.com/ontology/securityschemes#> .
+@prefix oplwebsrv: <http://www.openlinksw.com/ontology/webservices#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <http://schema.org/> . 
+@prefix wdrs: <http://www.w3.org/2007/05/powder-s#> .
+
+<#this>
+  a schema:CreativeWork ;
+  schema:name "Host-independent description of LDP service" ;
+  rdfs:comment "Actions supported by the Linked Data Platform service" ;
+  schema:mainEntity <#LdpSvc> ;
+  schema:about <#LdpSvc> .
+
+<#LdpSvc>
+  schema:mainEntityOfPage <#this> ;
+  a schema:WebApplication ;
+  schema:name "LDP generic" ;
+  schema:description "Host-independent Linked Data Platform service" ;
+  schema:potentialAction
+    <#LdpRead> , 
+    <#LdpCreateRdfResource> ,
+    <#LdpUpdateRdfResource> ,
+    <#LdpDelete> ;
+  wdrs:describedby <#this> . 
+
+<#LdpRead>
+  a schema:Action ;
+  schema:name "read" ;
+  schema:description "List a container's details and contents" ;
+  schema:target <#LdpRead_EntryPoint> ;
+  wdrs:describedby <#this> . 
+
+<#LdpRead_EntryPoint>
+  a schema:EntryPoint ;
+  schema:name "LDP Read - Retrieve a resource description" ;
+  schema:description """Retrieve a description of an LDP resource or container""" ;
+  schema:contentType "text/turtle" ;
+  schema:contentType "application/ld+json" ;
+  schema:httpMethod "GET" ;
+  schema:urlTemplate "(ldpResourceUri)" ; 
+  oplwebsrv:isEntryPointOf <#LdpRead> ;
+  oplwebsrv:hasParameter 
+    <#LdpParamResourceUri> ;
+  oplwebsrv:usageExample 
+    """curl -iH 'Accept: text/turtle, */*;q=0.1' -u dav:dav http://ods-qa.openlinksw.com:8896/DAV/home/fusepool/ldp/""" ; 
+  oplsec:securityScheme <#LdpBasicSecurityScheme> ;
+  wdrs:describedby <#this> . 
+
+<#LdpCreateRdfResource>
+  a schema:Action ;
+  schema:name "create" ;
+  schema:description """Create an LDP RDF resource""" ;
+  schema:target <#LdpCreateRdfResource_EntryPoint> ;
+  wdrs:describedby <#this> . 
+
+<#LdpCreateRdfResource_EntryPoint>
+  a schema:EntryPoint ;
+  schema:name "LDP-RS Create - Create an RDF resource" ;
+  schema:description """Create an RDF resource (LDP-RS) including containers (LDPCs)""" ; 
+  schema:encodingType 
+    "text/turtle" ;
+  schema:contentType 
+    "text/html" ;
+  schema:httpMethod "POST" ;
+  schema:urlTemplate "(ldpResourceUri)" ; 
+  oplwebsrv:isEntryPointOf <#LdpCreateRdfResource> ;
+  oplwebsrv:hasParameter 
+    <#LdpParamSlug> ,
+    <#LdpParamResourceUri> ;
+  oplwebsrv:usageExample 
+    """curl -iX POST --data-binary @ldp-test-data/bob_foaf_profile.ttl -u dav:dav -H 'Content-Type: text/turtle' -H 'Slug: bob_foaf' 'http://ods-qa.openlinksw.com:8896/DAV/home/fusepool/ldp/""" ; 
+  oplsec:securityScheme <#LdpBasicSecurityScheme> ;
+  wdrs:describedby <#this> . 
+
+<#LdpUpdateRdfResource>
+  a schema:Action ;
+  schema:name "update" ;
+  schema:description """Update an LDP RDF resource""" ;
+  schema:target <#LdpUpdateRdfResource_EntryPoint> ;
+  wdrs:describedby <#this> . 
+
+<#LdpUpdateRdfResource_EntryPoint>
+  a schema:EntryPoint ;
+  schema:name "LDP-RS Update - Update an RDF resource" ;
+  schema:description """Update an RDF resource (LDP-RS) including containers (LDPCs)""" ; 
+  schema:encodingType 
+    "text/turtle" ;
+  schema:contentType 
+    "text/html" ;
+  schema:httpMethod "PUT" ;
+  schema:urlTemplate "(ldpResourceUri)" ; 
+  oplwebsrv:isEntryPointOf <#LdpUpdateRdfResource> ;
+  oplwebsrv:hasParameter 
+    <#LdpParamResourceUri> ;
+  oplwebsrv:usageExample 
+    """curl -iX PUT --data-binary @ldp-test-data/update_container_resource.ttl -H "Content-Type: text/turtle" http://ods-qa.openlinksw.com:8896/DAV/home/fusepool/ldp/csv_transformer/""" ; 
+  oplsec:securityScheme <#LdpBasicSecurityScheme> ;
+  wdrs:describedby <#this> . 
+
+<#LdpParamResourceUri>
+  a oplwebsrv:WebServiceParameter ;
+  oplwebsrv:parameterName "ldpResourceUri" ; 
+  schema:name "Resource URL" ;
+  schema:description "The URL of an LDPR or LDPC. LDPCs must be terminated by /" ;
+  oplwebsrv:parameterType "uri" ;
+  oplwebsrv:isRequired true ;
+  wdrs:describedby <#this> . 
+
+<#LdpParamSlug>
+  a oplwebsrv:WebServiceParameter ;
+  oplwebsrv:parameterName "Slug" ; 
+  oplwebsrv:parameterType "header" ;
+  schema:name "Suggested name" ;
+  schema:description "The suggested name (slug) for the new resource" ;
+  oplwebsrv:isRequired true ;
+  wdrs:describedby <#this> . 
+
+<#LdpDelete>
+  a schema:Action ;
+  schema:name "delete" ;
+  schema:description "Delete an LDP resource" ;
+  schema:target <#LdpDelete_EntryPoint> ;
+  wdrs:describedby <#this> . 
+
+<#LdpDelete_EntryPoint>
+  a schema:EntryPoint ;
+  schema:name "LDP Delete - Delete an LDP resource" ;
+  schema:description """Deletes an LDP resource or container""" ;
+  schema:httpMethod "DELETE" ;
+  schema:urlTemplate "(ldpResourceUri)" ; 
+  oplwebsrv:isEntryPointOf <#LdpDelete> ;
+  oplwebsrv:hasParameter 
+    <#LdpParamResourceUri> ;
+  oplwebsrv:usageExample 
+    """curl -iX DELETE -u dav:dav http://ods-qa.openlinksw.com:8896/DAV/home/fusepool/ldp/bob_foaf""" ; 
+  oplsec:securityScheme <#LdpBasicSecurityScheme> ;
+  wdrs:describedby <#this> . 
+
+<#LdpBasicSecurityScheme>
+  a oplsec:SecurityScheme , oplsec:HttpSecurityScheme ;
+  oplsec:httpAuthSchemeName "basic" ;
+  wdrs:describedby <#this> . 

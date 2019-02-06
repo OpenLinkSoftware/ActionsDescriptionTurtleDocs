@@ -1,0 +1,81 @@
+@prefix oplsec: <http://www.openlinksw.com/ontology/securityschemes#> .
+@prefix oplwebsrv: <http://www.openlinksw.com/ontology/webservices#> .
+@prefix schema: <http://schema.org/> . 
+@prefix wdrs: <http://www.w3.org/2007/05/powder-s#> .
+
+<#this>
+  a schema:CreativeWork ;
+  schema:name "Description of Virtuoso Describe Service" ;
+  schema:mainEntity <#DescribeService> ;
+  schema:about <#DescribeService> .
+
+<#DescribeService>
+  schema:mainEntityOfPage <#this> ;
+  a schema:WebApplication ;
+  schema:name "describe_svc" ;
+  schema:description "Virtuoso /describe service" ;
+  schema:potentialAction
+    <#DescribeAction> ;
+  wdrs:describedby <#this> . 
+
+<#DescribeAction>
+  a schema:Action ;
+  oplwebsrv:hasActionWord "describe" ;
+  #schema:name "describe" ;
+  schema:description "Virtuoso Describe service : describe entity" ;
+  schema:target <#DescribeEntryPoint> ;
+  wdrs:describedby <#this> . 
+
+<#DescribeEntryPoint>
+  a schema:EntryPoint ;
+  schema:contentType "text/html", "text/turtle", "application/rdf+xml" ;
+  schema:httpMethod "GET" ;
+  schema:urlTemplate <https://linkeddata.uriburner.com/describe/?{url}&sponger:get=add&sr=clean> ;
+  oplwebsrv:hasParameter <#DescribeActionParamEntityUrl> ;
+  oplsec:securityScheme <#DescribeSecurityScheme> ;
+  wdrs:describedby <#this> . 
+
+<#DescribeActionParamEntityUrl>
+  a oplwebsrv:WebServiceParameter ;
+  schema:name "Entity URL" ;
+  oplwebsrv:shortDescription "The URL of the entity to be described. The entity description must be held in the RDF store.";
+  oplwebsrv:parameterName "url" ; 
+  oplwebsrv:parameterType "query" ;
+  oplwebsrv:parameterExampleValue "https://angel.co/spacex" ;
+  oplwebsrv:isRequired true ;
+  wdrs:describedby <#this> . 
+
+<#DescribeSecurityScheme> 
+  a oplsec:SecurityScheme , oplsec:WebIdSecurityScheme ;
+  oplsec:delegationHeader "On-Behalf-Of" ;
+  #
+  # These session related properties are not required when invoking the target 
+  # service (i.e. /describe) through https (see the EntryPoint's schema.url above). 
+  # If no VAL login is performed, VAL will authenticate the client using the certificate, 
+  # if any, supplied by OSDB. This per-service-call authentication uses any WebID in the
+  # certificate, or just the certificate fingerprint if no WebID is present. Per-service-call
+  # authentication does not establish a session.
+  #
+  # These session related properties are required if invoking the target service 
+  # through http. Any service request from OSDB will then not be accompanied by
+  # a certificate; so a VAL login session must have been established beforehand.
+  # (NOTE: OSDB does not currently support invocation of a VAL+WebID protected 
+  # service through http. Only invocation via https is supported.)
+  #
+  # The session properties could in principle be used with https to establish a session
+  # prior to any service requests. This would eliminates per-service-call authentication
+  # in favour of a single login call which, when used from a client making multiple
+  # service requests, is more efficient. However there is no efficiency gain to be
+  # had with OSDB - if a login/logout endpoint was defined in the service description,
+  # (using sessionAuthorizationUrl/sessionReleaseUrl) each service request would need
+  # to be wrapped by login and logout calls as OSDB, at present, would not know when 
+  # a client has finished with a target service session and so would have to close the 
+  # session after each request, nullifying the benefit.
+  #
+  oplsec:sessionAuthorizationUrl "https://linkeddata.uriburner.com/val/api/ogin?service=webid" ;
+  oplsec:sessionReleaseUrl "https://linkeddata.uriburner.com/val/api/logout" ;
+  oplsec:sessionKeyLocation "cookie" ;
+  oplsec:sessionKeyName "sid" ;
+  oplsec:sessionKeyReceiptLocation "cookie" ;
+  oplsec:sessionKeyReceiptName "sid" ;
+  wdrs:describedby <#this> . 

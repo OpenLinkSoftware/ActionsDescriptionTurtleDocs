@@ -1,0 +1,87 @@
+@prefix oplsec: <http://www.openlinksw.com/ontology/securityschemes#> .
+@prefix oplwebsrv: <http://www.openlinksw.com/ontology/webservices#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <http://schema.org/> . 
+@prefix wdrs: <http://www.w3.org/2007/05/powder-s#> .
+
+<#this>
+  a schema:CreativeWork ;
+  schema:name "Description of user-contextless subset of Uber Ride Requests API " ;
+  rdfs:comment "This subset contains APIs which do not require user authentication" ;
+  schema:mainEntity <#UberRideRequestsSvc> ;
+  schema:about <#UberRideRequestsSvc> .
+
+<#UberRideRequestsSvc>
+  schema:mainEntityOfPage <#this> ;
+  a schema:WebApplication ;
+  schema:name "Uber" ;
+  schema:description "Uber Ride Requests Service (subset containing APIs which do not require user authentication)" ;
+  schema:potentialAction
+    <#UberProductsAction> ;
+  wdrs:describedby <#this> . 
+
+<#UberProductsAction>
+  a schema:Action ;
+  schema:name "products" ;
+  schema:description "Returns information about the Uber products offered at a given location" ;
+  schema:target <#UberProductsEntryPoint> ;
+  wdrs:describedby <#this> . 
+
+<#UberProductsEntryPoint>
+  a schema:EntryPoint ;
+  schema:name "Products — Uber products at a given location" ;
+  schema:description """
+    The Products endpoint returns information about the Uber products offered at a given location. 
+    The response includes the display name and other details about each product.
+    
+    This endpoint does not reflect real-time availability of the products. Please use the Time 
+    Estimates endpoint to determine real-time availability and ETAs of products.
+
+    In some markets, the list of products returned from this endpoint may vary by the time of 
+    day due to time restrictions on when that product may be utilized.
+   """ ;
+  schema:contentType "application/json" ;
+  schema:httpMethod "GET" ;
+  schema:url <https://sandbox-api.uber.com/v1/products> ;
+  schema:urlTemplate "https://sandbox-api.uber.com/v1/products(?latitude,longitude)" ; 
+  oplwebsrv:isEntryPointOf <#UberProductsAction> ;
+  oplwebsrv:hasParameter 
+    <#UberProductsParamLatitude> ,
+    <#UberProductsParamLongitude> ;
+  oplwebsrv:usageExample 
+    """curl -H 'Authorization: Token sT1eIxxxx' 'https://sandbox-api.uber.com/v1/products?latitude=37.7759792&longitude=-122.41823'""" ; 
+  oplsec:securityScheme <#UberProductsSecurityScheme> ;
+  oplwebsrv:rdfGenerator <http://ods-qa.openlinksw.com:8896/ext/uber_content> ;
+  oplwebsrv:rdfViewer <#UberProductsRdfViewer> ;
+  wdrs:describedby <#this> . 
+
+<#UberProductsParamLatitude>
+  a oplwebsrv:WebServiceParameter ;
+  oplwebsrv:parameterName "latitude" ; 
+  schema:name "Latitude" ;
+  schema:description "Latitude component of location" ;
+#  oplwebsrv:parameterType xsd:decimal ;
+  oplwebsrv:parameterExampleValue "37.7759792" ;
+  oplwebsrv:isRequired true ;
+  wdrs:describedby <#this> . 
+
+<#UberProductsParamLongitude>
+  a oplwebsrv:WebServiceParameter ;
+  oplwebsrv:parameterName "longitude" ; 
+  schema:name "Longitude" ;
+  schema:description "Longitude component of location" ;
+#  oplwebsrv:parameterType xsd:decimal ;
+  oplwebsrv:parameterExampleValue "-122.41823" ;
+  oplwebsrv:isRequired true ;
+  wdrs:describedby <#this> . 
+
+<#UberProductsSecurityScheme>
+  a oplsec:SecurityScheme , oplsec:ApiKeySecurityScheme ;
+  oplsec:apiKeyName "Authorization" ;
+  oplsec:apiKeyLocation "header" ;
+  wdrs:describedby <#this> . 
+
+<#UberProductsRdfViewer>
+  a oplwebsrv:RdfViewer ;
+  schema:urlTemplate "http://ods-qa.openlinksw.com:8896/describe/(?url)" ; 
+  wdrs:describedby <#this> . 

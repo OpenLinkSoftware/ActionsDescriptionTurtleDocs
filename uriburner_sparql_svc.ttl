@@ -1,0 +1,126 @@
+@prefix oplsec: <http://www.openlinksw.com/ontology/securityschemes#> .
+@prefix oplwebsrv: <http://www.openlinksw.com/ontology/webservices#> .
+@prefix schema: <http://schema.org/> .
+@prefix wdrs: <http://www.w3.org/2007/05/powder-s#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<#this>
+  a schema:CreativeWork ;
+  schema:about <#SPARQLQueryService> ;
+  schema:name "Description of the URIBurner SPARQL Query Service" ;
+  schema:mainEntity <#SPARQLQueryService> .
+
+<#SPARQLQueryService>
+  a schema:WebApplication ;
+  schema:name "uriburner_sparql_query_svc" ;
+  schema:description "URIBurner SPARQL Query Service" ;
+  schema:alternateName "URIBurnerSPARQLQueryService" ;
+  schema:potentialAction <#SPARQLSelectQueryAction> ;
+  schema:mainEntityOfPage <#this> ;
+  wdrs:describedby <#this> .
+
+<#SPARQLSelectQueryAction>
+  a schema:Action ;
+  schema:name "sparql_query" ;
+  schema:description "SPARQL Query Action" ;
+  schema:target <#SPARQLQueryServiceEntryPoint> ;
+  wdrs:describedby <#this> .
+
+<#SPARQLQueryServiceEntryPoint>
+  a schema:EntryPoint ;
+  schema:description """
+    HTTP Service Endpoint that accepts a variety of parameters that control SPARQL query behaviour. 
+    Parameters include: query for query payload, default-graph-uri for setting the default named graph 
+    to be queried in the absence of FROM clause(s), should-sponge for enabling/disabling extract, transform 
+    and load workflow, timeout for controlling the solution production timeframe, and format for controlling 
+    document type used to return the query solution (e.g., HTML, CSV, XML, JSON etc).
+    """ ;
+  schema:name "SPARQL Query Service Endpoint" ;
+  oplsec:securityScheme <#SPARQLQueryServiceSecurityScheme> ;
+  # The query service response format can be set either through the 'format' parameter or an Accept header (set by schema:contentType).
+  # The Accept header can in principle specify any of the MIME types listed for 'format'. However, to avoid mismatches between the
+  # the 'format' parameter and Accept header settings, we set schema:contentType to '*/*' to allow 'format' to take precedence.
+  schema:contentType "*/*" ;
+  schema:httpMethod "GET" ;
+  schema:url <https://linkeddata.uriburner.com/sparql/> ;
+  schema:urlTemplate "https://linkeddata.uriburner.com/sparql(?default-graph-uri,query,format,should-sponge,timeout)" ;
+  oplwebsrv:hasParameter 
+    <#SPARQLQueryServiceParameterDefaultGraph> , 
+    <#SPARQLQueryServiceParameterQuery> , 
+    <#SPARQLQueryServiceParameterFormat> , 
+    <#SPARQLQueryServiceParameterShouldSponge> , 
+    <#SPARQLQueryServiceParameterTimeout> ;
+  oplwebsrv:usageExample 
+    "https://linkeddata.uriburner.com/sparql?default-graph-uri=&query=SELECT DISTINCT * WHERE {?s a ?o} LIMIT 5&should-sponge=&format=text%2Fhtml&timeout=30000000" , 
+    "https://linkeddata.uriburner.com/sparql?default-graph-uri=&query=SELECT+DISTINCT+*+WHERE+%7B%5B%5D+a+%3FEntityType%7D+LIMIT+5&should-sponge=&timeout=30000000" ;
+  wdrs:describedby <#this> .
+
+<#SPARQLQueryServiceSecurityScheme>
+  a oplsec:WebIdSecurityScheme , oplsec:SecurityScheme ;
+  oplsec:delegationHeader "On-Behalf-Of" ;
+  wdrs:describedby <#this> .
+
+<#SPARQLQueryServiceParameterDefaultGraph>
+  a oplwebsrv:WebServiceParameter ;
+  schema:description "An optional graph IRI identifying the graph to query if the query does not include any FROM or FROM NAMED clauses." ;
+  schema:name "Default-Graph-URI" ;
+  oplwebsrv:parameterName "default-graph-uri" ;
+  oplwebsrv:parameterExampleValue "http://dbpedia.org" ;
+  oplwebsrv:usageExample "https://linkeddata.uriburner.com/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=SELECT+DISTINCT+*+WHERE+%7B%5B%5D+a+%3FEntityType%7D+LIMIT+5&format=text%2Fhtml&timeout=30000000" ;
+  wdrs:describedby <#this> .
+
+<#SPARQLQueryServiceParameterQuery>
+  a oplwebsrv:WebServiceParameter ;
+  schema:description "The SPARQL query text to execute." ;
+  schema:name "Query" ;
+  oplwebsrv:parameterName "query" ;
+  oplwebsrv:parameterExampleValue "SELECT DISTINCT * WHERE {?s a ?o} LIMIT 5" ;
+  oplwebsrv:usageExample "https://linkeddata.uriburner.com/sparql?query=SELECT DISTINCT * WHERE {?s a ?o} LIMIT 5" ;
+  oplwebsrv:isRequired "true"^^xsd:boolean ;
+  wdrs:describedby <#this> .
+
+<#SPARQLQueryServiceParameterFormat>
+  a oplwebsrv:WebServiceParameter ;
+  schema:description "A MIME type specifying the preferred query response format." ;
+  schema:name "Format" ;
+  oplwebsrv:parameterName "format" ;
+  oplwebsrv:parameterValue 
+    "text/turtle" , 
+    "text/csv" ,
+    "text/plain" , 
+    "text/html" , 
+    "application/rdf+xml" , 
+    "application/sparql-results+xml" , 
+    "application/sparql-results+json" , 
+    "application/javascript" , 
+    "application/vnd.ms-excel" ; 
+  oplwebsrv:parameterExampleValue "text/html" ;
+  oplwebsrv:usageExample "https://linkeddata.uriburner.com/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=SELECT+DISTINCT+*+WHERE+%7B%5B%5D+a+%3FEntityType%7D+LIMIT+50&format=text%2Fhtml&timeout=30000000" ;
+  wdrs:describedby <#this> .
+
+<#SPARQLQueryServiceParameterShouldSponge>
+  a oplwebsrv:WebServiceParameter ;
+  schema:description """
+    This parameter determines if a variety of extract, transform and load workflows 
+    are dispatched to RDF transformation service providers (a/k/a RDFizers).
+    """ ;
+  schema:name "Should-Sponge" ;
+  oplwebsrv:parameterName "should-sponge" ;
+  oplwebsrv:parameterValue 
+    "" , # Use only local data (including data retrieved before), but do not retrieve more.
+    "soft" , # Retrieve remote RDF data for all missing source graphs.
+    "grab-all" , # Retrieve all missing remote RDF data that might be useful.
+    "grab-all-seealso" , # Retrieve all missing remote RDF data that might be useful, including seeAlso references.
+    "grab-everything" ; # Try to download all referenced resources (this may be very slow and inefficient).
+  oplwebsrv:parameterValueDefault  "" ;
+  wdrs:describedby <#this> .
+
+<#SPARQLQueryServiceParameterTimeout>
+  a oplwebsrv:WebServiceParameter ;
+  schema:description "The timeframe (in milliseconds) within which a complete or partial SPARQL query solution should be produced." ;
+  schema:name "Timeout" ;
+  oplwebsrv:parameterName "timeout" ;
+  oplwebsrv:parameterExampleValue "30000000" ;
+  oplwebsrv:usageExample "https://linkeddata.uriburner.com/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=SELECT+DISTINCT+*+WHERE+%7B%5B%5D+a+%3FEntityType%7D+LIMIT+5&format=text%2Fhtml&timeout=30000000" ;
+  wdrs:describedby <#this> .
+

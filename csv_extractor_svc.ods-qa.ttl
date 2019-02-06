@@ -1,0 +1,77 @@
+@prefix oplwebsrv: <http://www.openlinksw.com/ontology/webservices#> .
+@prefix schema: <http://schema.org/> . 
+@prefix wdrs: <http://www.w3.org/2007/05/powder-s#> .
+
+<#this>
+  a schema:CreativeWork ;
+  schema:name "Description of OpenLink CSV to Linked Data Transformer Service" ;
+  schema:mainEntity <#CsvLDGenService> ;
+  schema:about <#CsvLDGenService> .
+
+<#CsvLDGenService>
+  schema:mainEntityOfPage <#this> ;
+  a schema:WebApplication ;
+  schema:name "CSV Transformer" ;
+  schema:description "A Virtuoso Sponger transformer for converting CSV data to Linked Data" ;
+  schema:potentialAction
+    <#CsvLDGenTransformAction> ;
+  wdrs:describedby <#this> . 
+
+<#CsvLDGenTransformAction>
+  a schema:Action ;
+  schema:name "transform" ;
+  schema:description "Transform CSV data to RDF" ;
+  schema:target <#CsvLDGenTransformEntryPoint> ;
+  wdrs:describedby <#this> . 
+
+<#CsvLDGenTransformEntryPoint>
+  a schema:EntryPoint ;
+  schema:name "Transform — CSV to RDF Transformer Endpoint" ;
+  schema:description """HTTP service endpoint that accepts a variety of parameters which control 
+   the conversion of CSV data to Linked Data by the OpenLink CSV transformer.
+   """ ;
+  schema:encodingType 
+    "text/csv", 
+    "text/tab-separated-values" ;
+  schema:contentType
+    "application/rdf+xml" ,
+    "application/ld+json" ,
+    "text/turtle" ;
+  schema:httpMethod "POST" ;
+  schema:url <http://ods-qa.openlinksw.com:8896/ldgeneration> ;
+  schema:urlTemplate "http://ods-qa.openlinksw.com:8896/ldgeneration(?extractor)" ; 
+  oplwebsrv:isEntryPointOf <#CsvLDGenTransformAction> ;
+  oplwebsrv:hasParameter 
+    <#CsvTransformParamExtractor> ,
+    <#CsvTransformParamBaseUri> ;
+  oplwebsrv:usageExample 
+    """curl -i -H \"Content-Type: text/csv\" -H \"Accept: application/rdf+xml\" -H \"Content-Location: http://fp3.com/trentino/pub\" --data-binary @osterie.csv -X POST \"http://ods-qa.openlinksw.com:8896/ldgeneration?extractor=csv\" """ ;
+  oplwebsrv:rdfGenerator "self" ;
+  oplwebsrv:rdfViewer <#CsvTransformerRdfViewer> ;
+  wdrs:describedby <#this> . 
+
+<#CsvTransformParamExtractor>
+  a oplwebsrv:WebServiceParameter ;
+  oplwebsrv:parameterName "extractor" ; 
+  schema:name "Transformation Service" ;
+  oplwebsrv:shortDescription "ID of the transformer to be used" ;
+  oplwebsrv:isRequired true ;
+  oplwebsrv:parameterValue "csv" ;
+  wdrs:describedby <#this> . 
+
+<#CsvTransformParamBaseUri>
+  a oplwebsrv:WebServiceParameter ;
+  oplwebsrv:parameterName "Content-Location" ; 
+  oplwebsrv:parameterType "header" ;
+  schema:name "Base URI" ;
+  oplwebsrv:shortDescription """
+    Base URI to be used as the stem for all generated entity URIs.
+    Typically it is set to match the URI of the document providing the CSV data.
+    """ ;
+  oplwebsrv:isRequired true ;
+  wdrs:describedby <#this> . 
+
+<#CsvTransformerRdfViewer>
+  a oplwebsrv:RdfViewer ;
+  schema:urlTemplate "http://ods-qa.openlinksw.com:8896/describe/(?url)" ; 
+  wdrs:describedby <#this> . 

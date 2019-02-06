@@ -1,0 +1,199 @@
+@prefix oplsec: <http://www.openlinksw.com/ontology/securityschemes#> .
+@prefix oplwebsrv: <http://www.openlinksw.com/ontology/webservices#> .
+@prefix schema: <http://schema.org/> .
+@prefix wdrs: <http://www.w3.org/2007/05/powder-s#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<#this>
+  a schema:CreativeWork ;
+  schema:about <#SPARULQueryService> ;
+  schema:name "Host-independent description of the Virtuoso SPARUL Query Service" ;
+  schema:mainEntity  <#SPARULQueryService> .
+
+<#SPARULQueryService>
+  a schema:WebApplication ;
+  schema:name "virtuoso_sparul_query_svc" ;
+  schema:description "Virtuoso SPARUL Insert, Update, Delete Query Service" ;
+  schema:potentialAction 
+    <#SPARULUpdateUsingGET> ,
+    <#SPARULUpdateUsingPOST> ;
+  schema:mainEntityOfPage <#this> ;
+  wdrs:describedBy <#this> .
+
+<#SPARULUpdateUsingGET>
+  a schema:UpdateAction , schema:Action ;
+  schema:name "sparul_update_using_get" ;
+  schema:description "SPARQL update operation using GET" ;
+  schema:target <#SPARULGetUpdateEntryPoint> ;
+  wdrs:describedBy <#this> .
+
+<#SPARULUpdateUsingPOST>
+  a schema:UpdateAction , schema:Action ;
+  schema:name "sparul_update_using_post" ;
+  schema:description "SPARUL update operation using POST" ;
+  schema:target <#SPARULPostUpdateEntryPoint> ;
+  wdrs:describedBy <#this> .
+
+<#SPARULGetUpdateEntryPoint>
+  a schema:EntryPoint ;
+  schema:httpMethod "GET" ;
+  # The service response format can be set either through the 'format' parameter or an Accept header (set by schema:contentType).
+  # The Accept header can in principle specify any of the MIME types listed for 'format'. However, to avoid mismatches between the
+  # the 'format' parameter and Accept header settings, we set schema:contentType to '*/*' to allow 'format' to take precedence.
+  schema:contentType "*/*" ;
+  schema:urlTemplate "https://(host)/sparql(?default-graph-uri,query,format,should-sponge,timeout)" ;
+  oplsec:securityScheme <#SPARULQueryServiceSecurityScheme> ;
+  oplwebsrv:hasParameter  
+    <#SPARULQueryServiceParameterHost> , 
+    <#SPARULQueryServiceParameterDefaultGraph> , 
+    <#SPARULQueryServiceParameterQuery> , 
+    <#SPARULQueryServiceParameterFormat> , 
+    <#SPARULQueryServiceParameterShouldSponge> , 
+    <#SPARULQueryServiceParameterTimeout> ;
+  schema:description """
+    HTTP service endpoint that accepts a variety of parameters that control SPARUL query behavior.
+    Parameters include:
+    * query for encoded query payload, 
+    * qtxt for query editor, 
+    * default-graph-uri for named graph  [internal document] identification, 
+    * should-sponge for enabling/disabling extract, transform, and load  workflow, 
+    * timeout for controlling solution production timeframe, and 
+    * format for controlling document type used to return query solution [e.g., HTML, CSV, XML, JSON, CXML etc].
+    """ ;
+  oplwebsrv:usageExample 
+    "https://linkeddata.uriburner.com/sparql?default-graph-uri=&query=with+%3Curn%3Aidehen%3Asparul%3Aqa%3A%3E%0D%0Ainsert+%7B%0D%0A++%3C%23this%3E+%3C%23relatedTo%3E+%3C%23that%3E+.+%0D%0A%7D&should-sponge=&format=text%2Fhtml&timeout=30000000" ;
+  wdrs:describedby <#this> .
+
+<#SPARULPostUpdateEntryPoint>
+  a schema:EntryPoint ;
+  schema:httpMethod "POST" ;
+  # The service response format can be set either through the 'format' parameter or an Accept header (set by schema:contentType).
+  # The Accept header can in principle specify any of the MIME types listed for 'format'. However, to avoid mismatches between the
+  # the 'format' parameter and Accept header settings, we set schema:contentType to '*/*' to allow 'format' to take precedence.
+  schema:contentType "*/*" ;
+  schema:urlTemplate "https://(host)/sparql(?default-graph-uri,format,should-sponge,timeout)" ;
+  oplsec:securityScheme <#SPARULQueryServiceSecurityScheme> ;
+  oplwebsrv:hasParameter  
+    <#SPARULQueryServiceParameterHost> , 
+    <#SPARULQueryServiceParameterDefaultGraph> , 
+    <#SPARULQueryServiceBodyParameterQuery> , 
+    <#SPARULQueryServiceParameterFormat> , 
+    <#SPARULQueryServiceParameterShouldSponge> , 
+    <#SPARULQueryServiceParameterTimeout> ;
+  schema:description """
+    HTTP service endpoint that accepts a variety of parameters that control SPARUL query behavior.
+    Parameters include:
+    * query for encoded query payload, 
+    * qtxt for query editor, 
+    * default-graph-uri for named graph  [internal document] identification, 
+    * should-sponge for enabling/disabling extract, transform, and load  workflow, 
+    * timeout for controlling solution production timeframe, and 
+    * format for controlling document type used to return query solution [e.g., HTML, CSV, XML, JSON, CXML etc].
+    """ ;
+  schema:encodingType "application/x-www-form-urlencoded" ; 
+  oplwebsrv:usageExample 
+    "curl -iL \"https://linkeddata.uriburner.com/sparql?default-graph-uri=&should-sponge=&format=text%2Fturtle&timeout=30000000\" --data-urlencode \"query=with <urn:idehen:sparul:qa:> insert { <#this> <#relatedTo> <#that> . }\" " ;
+  wdrs:describedby <#this> .
+
+<#SPARULQueryServiceParameterHost>
+  a oplwebsrv:WebServiceParameter ;
+  schema:description "The hostname of the SPARUL endpoint" ;
+  schema:name "Host" ;
+  oplwebsrv:parameterName "host" ;
+  oplwebsrv:parameterType "path" ;
+  oplwebsrv:isRequired "true"^^xsd:boolean ;
+  oplwebsrv:parameterExampleValue "linkeddata.uriburner.com" ;
+  wdrs:describedby <#this> .
+
+<#SPARULQueryServiceParameterDefaultGraph>
+  a oplwebsrv:WebServiceParameter ;
+  schema:description "An optional graph IRI identifying the graph to update if the graph isn't identified in the update request." ;
+  schema:name "Default-Graph-URI" ;
+  oplwebsrv:parameterName "default-graph-uri" ;
+  oplwebsrv:parameterType "query" ;
+  oplwebsrv:usageExample 
+    "https://linkeddata.uriburner.com/sparql?default-graph-uri=&query=with+%3Curn%3Aidehen%3Asparul%3Aqa%3A%3E%0D%0Ainsert+%7B%0D%0A++%3C%23this%3E+%3C%23relatedTo%3E+%3C%23that%3E+.+%0D%0A%7D&should-sponge=&format=text%2Fhtml&timeout=30000000" ;
+  wdrs:describedby <#this> .
+
+<#SPARULQueryServiceParameterFormat>
+  a oplwebsrv:WebServiceParameter ;
+  schema:description "A MIME type specifying the preferred query response format." ;
+  schema:name "Format" ;
+  oplwebsrv:parameterName "format" ;
+  oplwebsrv:parameterType "query" ;
+  oplwebsrv:parameterValue 
+    "text/turtle" , 
+    "text/csv" ,
+    "text/plain" , 
+    "text/html" , 
+    "application/rdf+xml" , 
+    "application/sparql-results+xml" , 
+    "application/sparql-results+json" , 
+    "application/javascript" , 
+    "application/vnd.ms-excel" ; 
+  oplwebsrv:parameterValueDefault "application/sparql-results+xml" ;
+  oplwebsrv:usageExample 
+    "https://linkeddata.uriburner.com/sparql?default-graph-uri=&query=with+%3Curn%3Aidehen%3Asparul%3Aqa%3A%3E%0D%0Ainsert+%7B%0D%0A+%3C%23this%3E+%3C%23relatedTo%3E+%3C%23that%3E+.+%0D%0A%7D&should-sponge=&format=text%2Fhtml&timeout=30000000" ;
+  wdrs:describedby <#this> .
+
+<#SPARULQueryServiceParameterShouldSponge>
+  a oplwebsrv:WebServiceParameter ;
+  schema:description """
+  This parameter determines if a variety of extract, transform and load workflows 
+  are dispatched to RDF transformation service providers (a/k/a RDFizers).
+  """ ;
+  schema:name "Should-Sponge" ;
+  oplwebsrv:parameterName "should-sponge" ;
+  oplwebsrv:parameterType "query" ;
+  oplwebsrv:parameterValue 
+    "" , # Use only local data (including data retrieved before), but do not retrieve more.
+    "soft" , # Retrieve remote RDF data for all missing source graphs.
+    "grab-all" , # Retrieve all missing remote RDF data that might be useful.
+    "grab-all-seealso" , # Retrieve all missing remote RDF data that might be useful, including seeAlso references.
+    "grab-everything" ; # Try to download all referenced resources (this may be very slow and inefficient).
+  oplwebsrv:parameterValueDefault "" ;
+  oplwebsrv:usageExample "https://linkeddata.uriburner.com/sparql?default-graph-uri=&query=insert+%7B%0D%0A+graph+%3Curn%3Aidehen%3Asparul%3Aqa%3A%3E+%7B%0D%0A+%3Fs+%3Fp+%3Fo+%7D%0D%0A+%7D%0D%0A%0D%0Ausing+%3Chttp%3A%2F%2Fwww.openlinksw.com%2F%3E%0D%0Awhere+%7B%3Fs+%3Fp+%3Fo%7D&should-sponge=soft&format=text%2Fhtml&timeout=30000000" ;
+  wdrs:describedby <#this> .
+
+<#SPARULQueryServiceParameterTimeout>
+  a oplwebsrv:WebServiceParameter ;
+  wdrs:describedby <#this>;
+  schema:description "The timeframe (in milliseconds) within which a complete or partial SPARQL query solution should be produced." ;
+  schema:name "Timeout" ;
+  oplwebsrv:parameterName "timeout" ;
+  oplwebsrv:parameterType "query" ;
+  oplwebsrv:parameterExampleValue "30000000" ;
+  oplwebsrv:usageExample "https://linkeddata.uriburner.com/sparql?default-graph-uri=&query=insert+%7B%0D%0A+graph+%3Curn%3Aidehen%3Asparul%3Aqa%3A%3E+%7B%0D%0A+%3Fs+%3Fp+%3Fo+%7D%0D%0A+%7D%0D%0A%0D%0Ausing+%3Chttp%3A%2F%2Fwww.openlinksw.com%2F%3E%0D%0Awhere+%7B%3Fs+%3Fp+%3Fo%7D&should-sponge=soft&format=text%2Fhtml&timeout=30000000" ;
+  wdrs:describedby <#this> .
+
+<#SPARULQueryServiceParameterQuery>
+  a oplwebsrv:WebServiceParameter ;
+  schema:description "The SPARUL query text to execute." ;
+  schema:name "Query" ;
+  oplwebsrv:parameterName "query" ;
+  oplwebsrv:parameterType "query" ;
+  oplwebsrv:parameterDataType "long string" ;
+  oplwebsrv:isRequired "true"^^xsd:boolean ;
+  oplwebsrv:parameterExampleValue "WITH <urn:idehen:sparul:qa:> INSERT { <#this> <#relatedTo> <#that> . }" ;
+  oplwebsrv:usageExample 
+    "https://linkeddata.uriburner.com/sparql?default-graph-uri=&query=with+%3Curn%3Aidehen%3Asparul%3Aqa%3A%3E%0D%0Ainsert+%7B%0D%0A+%3C%23this%3E+%3C%23relatedTo%3E+%3C%23that%3E+.+%0D%0A%7D&should-sponge=&format=text%2Fhtml&timeout=30000000" ;
+  wdrs:describedby <#this> .
+
+<#SPARULQueryServiceBodyParameterQuery>
+  a oplwebsrv:WebServiceParameter ;
+  schema:description "The SPARUL query text to execute." ;
+  schema:name "Query" ;
+  oplwebsrv:parameterName "query" ;
+  oplwebsrv:parameterType "body" ;
+  oplwebsrv:parameterDataType "long string" ;
+  oplwebsrv:isRequired "true"^^xsd:boolean ;
+  oplwebsrv:parameterExampleValue "WITH <urn:idehen:sparul:qa:> INSERT { <#this> <#relatedTo> <#that> . }" ;
+  oplwebsrv:usageExample 
+    "curl -iL \"https://linkeddata.uriburner.com/sparql?default-graph-uri=&should-sponge=&format=text%2Fturtle&timeout=30000000\" --data-urlencode \"query=with <urn:idehen:sparul:qa:> insert { <#this> <#relatedTo> <#that> . }\" " ;
+  wdrs:describedby <#this> .
+
+<#SPARULQueryServiceSecurityScheme>
+  a oplsec:WebIdSecurityScheme , oplsec:SecurityScheme ;
+  oplsec:delegationHeader "On-Behalf-Of" ;
+  wdrs:describedby <#this> .
+

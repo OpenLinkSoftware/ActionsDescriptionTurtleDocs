@@ -1,0 +1,125 @@
+@prefix oplwebsrv: <http://www.openlinksw.com/ontology/webservices#> .
+@prefix schema: <http://schema.org/> . 
+@prefix wdrs: <http://www.w3.org/2007/05/powder-s#> .
+
+<#this>
+  a schema:CreativeWork ;
+  schema:name "Description of a Generic Search & Faceted Browsing Service" ;
+  schema:mainEntity <#FacetedBrowsingService> ;
+  schema:about <#FacetedBrowsingService> .
+
+<#FacetedBrowsingService>
+  schema:mainEntityOfPage <#this> ;
+  a schema:WebApplication ;
+  schema:name "facet" ;
+  schema:description "Faceted Browsing Service" ;
+  schema:potentialAction
+    <#FacetedBrowsingSearchAction> ;
+  wdrs:describedby <#this> . 
+
+<#FacetedBrowsingSearchAction>
+  a schema:Action, schema:SearchAction ;
+  oplwebsrv:hasActionWord "search" ;
+  #schema:name "search" ;
+  schema:description "Search — Faceted Browsing Action" ;
+  schema:target <#FacetedBrowsingSearchEntryPoint> ;
+  wdrs:describedby <#this> . 
+
+<#FacetedBrowsingSearchEntryPoint>
+  a schema:EntryPoint ;
+  schema:name "Search — Faceted Browsing Search Endpoint" ;
+  schema:description """HTTP Service Endpoint that accepts a variety of parameters that calibrate Faceted Browsing over 
+   various entity relationship dimensions: entity types, attribute names, attribute values. Parameters include:
+   q for keywords, view:type for dimension [entity type, attribute names, attribute values].
+   """ ;
+  schema:contentType "text/html" ;
+  schema:contentType "application/rdf+xml" ;
+  schema:contentType "text/turtle" ;
+  schema:contentType "application/json" ;
+  schema:httpMethod "GET" ;
+  schema:urlTemplate "http://ods-qa.openlinksw.com:8896/fct/search(?q,view:type,c-term,s-term,same-as,inference,offset,limit)" ; 
+  schema:url <http://ods-qa.openlinksw.com:8896/fct/search>;
+  ## OpenLink Web Services Ontology Terms
+  oplwebsrv:isEntryPointOf <#FacetedBrowsingSearchAction> ;
+  oplwebsrv:endPointURL <http://ods-qa.openlinksw.com:8896/fct/search> ;
+  oplwebsrv:urlTemplate "http://ods-qa.openlinksw.com:8896/fct/search(?q,view:type,c-term,s-term,same-as,inference,offset,limit)" ;
+  oplwebsrv:hasParameter <#FacetedBrowsingSearchActionParameterQ> ;
+  oplwebsrv:hasParameter <#FacetedBrowsingSearchActionParameterViewType> ;
+  oplwebsrv:hasParameter <#FacetedBrowsingSearchActionParameterSameAs> ;
+  oplwebsrv:hasParameter <#FacetedBrowsingSearchActionParameterOffset> ;
+  oplwebsrv:hasParameter <#FacetedBrowsingSearchActionParameterLimit> ;
+  oplwebsrv:usageExample "http://ods-qa.openlinksw.com:8896/fct/search?q=linked+data&view:type=entity-types&same-as=&offset=100&limit=100", 
+			 "http://ods-qa.openlinksw.com:8896/fct/search?q=linked+data&view:type=entity-types&same-as=yes&offset=100&limit=100" ;
+  wdrs:describedby <#this> . 
+
+<#FacetedBrowsingSearchActionParameterQ>
+  a oplwebsrv:WebServiceParameter ;
+  schema:name "Search text" ;
+  schema:description """
+   A word or phrase to be used for the Facet free text search. 
+   """;
+  oplwebsrv:shortDescription "A word or phrase to be used for the Facet free text search. Multiple words should be delimited by '+'"  ;
+  oplwebsrv:usageExample "http://ods-qa.openlinksw.com:8896/fct/search?q=linked+data" ;
+  oplwebsrv:parameterName "q" ; 
+  oplwebsrv:parameterExampleValue "linked+data" ;
+  oplwebsrv:isRequired true ;
+  wdrs:describedby <#this> . 
+
+<#FacetedBrowsingSearchActionParameterViewType>
+  a oplwebsrv:WebServiceParameter ;
+  schema:name "View orientation" ;
+  schema:description """
+   Sets the default view orientation of the initial page returned by the Faceted Browsing Service. 
+   """;
+  oplwebsrv:shortDescription "Sets the default view orientation" ;
+  oplwebsrv:parameterName "view:type" ; 
+  oplwebsrv:isRequired false ;
+  oplwebsrv:parameterValue "entity-types,attribute-names" ;
+  oplwebsrv:usageExample "http://ods-qa.openlinksw.com:8896/fct/search?q=linked+data&view:type=entity-types" ;
+  oplwebsrv:usageExample "http://ods-qa.openlinksw.com:8896/fct/search?q=linked+data&view:type=attribute-names&same-as=yes&offset=100&limit=100" ;
+  wdrs:describedby <#this> . 
+
+<#FacetedBrowsingSearchActionParameterSameAs>
+  a oplwebsrv:WebServiceParameter ;
+  schema:name "sameAs inferencing" ;
+  schema:description """
+   Determines if owl:sameAs inference and reasoning is applied to 
+   the generation of data presented by the entity description page. 
+   """;
+  oplwebsrv:shortDescription "Enables owl:sameAs inferencing for facet search" ;
+  oplwebsrv:usageExample "http://ods-qa.openlinksw.com:8896/fct/search?q=linked+data&view:type=entity-types&same-as=yes" ;
+  oplwebsrv:parameterName "same-as" ; 
+  oplwebsrv:isRequired false ;
+  oplwebsrv:parameterValue "yes" ;
+  wdrs:describedby <#this> . 
+
+<#FacetedBrowsingSearchActionParameterOffset>
+  a oplwebsrv:WebServiceParameter ;
+  schema:name "Result offset" ;
+  schema:description """
+   Determines offset (marker) boundary size that enables a user scroll (in either direction) through 
+   data presented in the entity description page of the Faceted Browser Service. Increase using blocks of this value 
+   to page forward or backwards.
+   """;
+  oplwebsrv:shortDescription "Sets the result set page size for scrolling" ;
+  oplwebsrv:usageExample "http://ods-qa.openlinksw.com:8896/fct/search?q=linked+data&view:type=entity-types&same-as=yes&offset=100&limit=100" ;
+  oplwebsrv:parameterName "offset" ; 
+  oplwebsrv:isRequired false ;
+  oplwebsrv:parameterExampleValue "100" ;
+  wdrs:describedby <#this> . 
+
+<#FacetedBrowsingSearchActionParameterLimit>
+  a oplwebsrv:WebServiceParameter ;
+  schema:name "Max result entities" ;
+  schema:description """
+   Determines maximum size of entity relationships in a query solution that provides
+   data presented in the entity description page of the Faceted Browser Service. This value remains fixed
+   when a user is scrolling through a query solution that provides data to a Faceted Browsing Page. 
+   """;
+  oplwebsrv:shortDescription "Limits the number of result set entities returned" ;
+  oplwebsrv:usageExample "http://ods-qa.openlinksw.com:8896/fct/search?q=linked+data&view:type=entity-types&same-as=yes&offset=100&limit=100" ;
+  oplwebsrv:parameterName "limit" ; 
+  oplwebsrv:isRequired false ;
+  oplwebsrv:parameterExampleValue "100" ;
+  wdrs:describedby <#this> . 
+

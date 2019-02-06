@@ -1,0 +1,72 @@
+# 
+# Service description for testing OSDB support for OIDC authentication and OAuth 2 protected services.
+# Access to a YouTube user's subscriptions listing requires an OAuth2 access token, in OSDB's case 
+# granted via OpenID Connect authentication but with additional YouTube-specific scopes requested.
+#
+# See https://developers.google.com/youtube/v3/docs/subscriptions/list
+# 
+
+@prefix oplwebsrv: <http://www.openlinksw.com/ontology/webservices#> .
+@prefix oplsec: <http://www.openlinksw.com/ontology/securityschemes#> .
+@prefix schema: <http://schema.org/> . 
+@prefix wdrs: <http://www.w3.org/2007/05/powder-s#> .
+
+<#this>
+  a schema:CreativeWork ;
+  schema:name "Description of YouTube Subscriptions API" ;
+  schema:mainEntity <#YouTubeSubscriptionsAPI> ;
+  schema:about <#YouTubeSubscriptionsAPI> .
+
+<#YouTubeSubscriptionsAPI>
+  schema:mainEntityOfPage <#this> ;
+  a schema:WebApplication ;
+  schema:name "youtube_subscriptions" ;
+  schema:description "YouTube Subscriptions API" ;
+  schema:potentialAction
+    <#YouTubeSubsAction> ;
+  wdrs:describedby <#this> . 
+
+# -- API: Get User Subscriptions --
+
+<#YouTubeSubsAction>
+  a schema:Action ;
+  schema:name "user_subscriptions" ;
+  schema:description "Lists a user's YouTube subscriptions" ;
+  schema:target <#YouTubeSubsEntryPoint> ;
+  wdrs:describedby <#this> . 
+
+<#YouTubeSubsEntryPoint>
+  a schema:EntryPoint ;
+  schema:name "YouTube subscriptions endpoint" ;
+  schema:url <https://www.googleapis.com/youtube/v3/subscriptions/?mine=true&part=snippet%2CcontentDetails> ;
+  schema:contentType "application/json" ;
+  schema:httpMethod "GET" ;
+  oplsec:securityScheme <#YouTubeSubsSecurityScheme> ;
+  wdrs:describedby <#this> . 
+
+# The Google OpenID Connect implementation allows an application to get permission to use other Google APIs, 
+# such as YouTube, at the same time as authenticating the user. To do this, the application includes the other
+# scopes that are needed in the authentication request sent to Google. 
+#
+# See https://developers.google.com/identity/protocols/OpenIDConnect, section "Advanced topics" > "Access to other Google APIs"
+#
+# YouTube OAuth 2.0 scopes are described at:
+# https://developers.google.com/identity/protocols/googlescopes#youtubev3
+
+<#YouTubeSubsSecurityScheme> 
+  a oplsec:SecurityScheme , oplsec:OpenIdConnectSecurityScheme ;
+  oplsec:openIdConnectUrl <https://accounts.google.com> ;
+  oplsec:hasOAuth2Scopes <#YouTubeSubsManageScope>, <#YouTubeSubsViewScope> ;
+  wdrs:describedby <#this> . 
+
+<#YouTubeSubsManageScope>
+  a oplsec:OAuth2Scope ;
+  oplsec:scopeName "https://www.googleapis.com/auth/youtube" ;
+  oplsec:scopeDescription "Manage your YouTube account" ;
+  wdrs:describedby <#this> . 
+
+<#YouTubeSubsViewScope>
+  a oplsec:OAuth2Scope ;
+  oplsec:scopeName "https://www.googleapis.com/auth/youtube.readonly" ;
+  oplsec:scopeDescription "View your YouTube account" ;
+  wdrs:describedby <#this> . 

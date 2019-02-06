@@ -1,0 +1,16 @@
+To exercise the SPARUL update actions describe by service 
+virtuoso_sparul_query_svc, you need to be able to insert via Virtuoso's 
+/sparql endpoint.
+
+In order to do so, you may need to grant the following permissions:
+
+grant execute on DB.DBA.SPARUL_LOAD to "SPARQL";
+grant execute on DB.DBA.SPARUL_LOAD to SPARQL_UPDATE;
+grant execute on DB.DBA.SPARUL_CLEAR to "SPARQL";
+grant execute on DB.DBA.SPARUL_CLEAR to SPARQL_UPDATE;
+grant SPARQL_UPDATE to "SPARQL" ;
+
+See also: http://docs.openlinksw.com/virtuoso/rdfsparul/
+
+The above should suffice if targetting an http endpoint. If targetting an 
+https endpoint, VAL will also need to be configured appropriately.

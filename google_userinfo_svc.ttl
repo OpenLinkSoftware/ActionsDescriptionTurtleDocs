@@ -1,0 +1,53 @@
+# 
+# Service description for testing OSDB support for OIDC authentication and OAuth 2 protected services
+# Access to the Google User Info endpoint requires an OAuth2 access token granted via OpenID Connect authentication.
+# 
+
+@prefix oplwebsrv: <http://www.openlinksw.com/ontology/webservices#> .
+@prefix oplsec: <http://www.openlinksw.com/ontology/securityschemes#> .
+@prefix schema: <http://schema.org/> . 
+@prefix wdrs: <http://www.w3.org/2007/05/powder-s#> .
+
+<#this>
+  a schema:CreativeWork ;
+  schema:name "Description of Google UserInfo Endpoint" ;
+  schema:mainEntity <#GoogleUserInfoService> ;
+  schema:about <#GoogleUserInfoService> .
+
+<#GoogleUserInfoService>
+  schema:mainEntityOfPage <#this> ;
+  a schema:WebApplication ;
+  schema:name "google_userinfo" ;
+  schema:description "Google UserInfo Service" ;
+  schema:potentialAction
+    <#UserInfoAction> ;
+  wdrs:describedby <#this> . 
+
+# -- API: Get User Info --
+
+<#UserInfoAction>
+  a schema:Action ;
+  schema:name "userinfo" ;
+  schema:description "Return user profile information" ;
+  schema:target <#UserInfoEntryPoint> ;
+  wdrs:describedby <#this> . 
+
+<#UserInfoEntryPoint>
+  a schema:EntryPoint ;
+  schema:name "Google OpenID Connect UserInfo endpoint" ;
+  schema:url <https://www.googleapis.com/oauth2/v3/userinfo> ;
+  schema:contentType "application/json" ;
+  schema:httpMethod "GET" ;
+  oplsec:securityScheme <#UserInfoOidcSecurityScheme> ;
+  wdrs:describedby <#this> . 
+
+# It is assumed that bearer access tokens accompanying authenticated requests are sent in an
+# Authorization request header. The other methods of sending bearer access tokens described by 
+# RFC 6750 (form-encoded body parameter or URI query parameter) are not supported because of 
+# the security risks.
+
+<#UserInfoOidcSecurityScheme> 
+  a oplsec:SecurityScheme , oplsec:OpenIdConnectSecurityScheme ;
+  oplsec:openIdConnectUrl <https://accounts.google.com> ;
+  wdrs:describedby <#this> . 
+
