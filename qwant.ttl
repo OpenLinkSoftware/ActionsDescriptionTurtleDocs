@@ -1,0 +1,57 @@
+## Generic Description
+## Schema.org Terms
+
+@prefix oplwebsrv: <http://www.openlinksw.com/ontology/webservices#> .
+@prefix schema: <http://schema.org/> . 
+@prefix wdrs: <http://www.w3.org/2007/05/powder-s#> .
+@base <https://www.qwant.com/> .
+@prefix search: </> .
+@prefix : <#> . 
+
+<>
+a schema:CreativeWork, schema:WebPage ;
+schema:name "Home Page" ;
+schema:about  search:, search:service ;
+schema:potentialAction <#ArticleSearchAction> ;
+schema:identifier <#this> . 
+
+search:service
+a schema:WebApplication ;
+schema:name "Qwant Search Service" ;
+schema:alternateName "quantSearch" ;
+schema:potentialAction <#ArticleSearchAction> .
+
+<#ArticleSearchAction>
+a schema:Action, schema:SearchAction ;
+schema:name "Search - Qwant" ;
+schema:target search:#this .
+
+search:#this
+a schema:EntryPoint ;
+schema:name "Search - Qwant Service Endpoint" ;
+schema:description """Parameters include:
+ search for keywords.
+ """ ;
+schema:contentType "text/html";
+schema:httpMethod "GET" ;
+schema:urlTemplate "https://www.qwant.com/(?q)" ; 
+schema:url <https://www.qwant.com/>;
+schema:mainEntityOfPage <#this> ;
+## OpenLink Web Services Ontology Terms
+oplwebsrv:isWebServiceOf <#ArticleSearchAction> ;
+oplwebsrv:endPointURL <https://www.qwant.com/> ;
+oplwebsrv:urlTemplate "https://www.qwant.com/(?q)" ;
+oplwebsrv:hasParameter <#SearchServiceParameterQ> ;
+oplwebsrv:usageExample "https://www.qwant.com/?q=SPARQL+Endpoint"; 
+wdrs:describedby <#this> ; 
+schema:mainEntityOfPage <#this> .
+
+<#SearchServiceParameterQ>
+a oplwebsrv:WebServiceParameter ;
+schema:name """Qwant Service Parameter 'q'""" ;
+schema:description """This parameter takes a keyword or phrase as its value. """;
+oplwebsrv:usageExample "https://www.qwant.com/?q=SPARQL+Endpoint" ;
+oplwebsrv:parameterName "q" ; 
+oplwebsrv:parameterExampleValue "SPARQL+Endpoint" ;
+wdrs:describedby <#this> ; 
+schema:mainEntityOfPage <#this> .
